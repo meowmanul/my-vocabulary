@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react';
 import { db } from '../firebase';
-import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
+import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
 
-export default function WordList() {
+export default function WordList( { currentUser } ) { 
   const [words, setWords] = useState([]);
 
   useEffect(() => {
-    const q = query(collection(db, 'words'), orderBy('createdAt', 'desc'));
+    if (!currentUser?.uid) return;
+
+    // Правильный синтаксис для Firestore v9+
+    const wordsCollection = collection(db, 'users', currentUser.uid, 'words');
+    const q = query(wordsCollection, orderBy('createdAt', 'desc'));
+
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const wordsData = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -14,17 +19,25 @@ export default function WordList() {
       }));
       setWords(wordsData);
     });
+
     return () => unsubscribe();
-  }, []);
+  }, [currentUser?.uid]);
 
   return (
     <div>
-      {words.map(word => (
-        <div key={word.id}>
-          <h3>{word.word}</h3>
-          <p>{word.translation}</p>
-        </div>
-      ))}
+      {words.length === 0 ? (
+        <p>Список слов пуст</p>
+      ) : (
+        words.map(word => (
+          <div key={word.id} style={{ margin: '10px', padding: '10px', border: '1px solid #ccc' }}>
+            <h3>{word.word}</h3>
+            <p>Перевод: {word.translation}</p>
+            {word.createdAt && (
+              <small>Добавлено: {word.createdAt.toLocaleString()}</small>
+            )}
+          </div>
+        ))
+      )}
     </div>
   );
-}   
+}
