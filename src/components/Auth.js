@@ -9,6 +9,7 @@ export default function Auth() {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      console.log("Successful!");
     } catch (error) {
       alert(error.message);
     }
