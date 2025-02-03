@@ -10,7 +10,6 @@ function App() {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      console.log("User:", user);
       setCurrentUser(user);
       setLoading(false);
       
@@ -22,13 +21,10 @@ function App() {
     });
     return () => unsubscribe();
   }, []);
-  console.log("currentUser:", currentUser);
 
   if (loading) {
     return <div>Loading...</div>;
   }
-
-  console.log("App currentUser:", currentUser?.uid);
 
   return (
     <div>

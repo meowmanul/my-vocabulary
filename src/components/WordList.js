@@ -8,7 +8,6 @@ export default function WordList( { currentUser } ) {
   useEffect(() => {
     if (!currentUser?.uid) return;
 
-    // Правильный синтаксис для Firestore v9+
     const wordsCollection = collection(db, 'users', currentUser.uid, 'words');
     const q = query(wordsCollection, orderBy('createdAt', 'desc'));
 
