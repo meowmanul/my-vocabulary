@@ -3,6 +3,7 @@ import Auth from './components/Auth';
 import AddWord from './components/AddWord';
 import WordList from './components/WordList';
 import { auth } from './firebase';
+import './App.css';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -27,12 +28,15 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="container">
       {!currentUser ? (
         <Auth />
       ) : (
         <>
-          <button onClick={() => auth.signOut()}>Выйти</button>
+          <div className="header">
+          <h2>My Vocabulary</h2>
+            <button onClick={() => auth.signOut()}>Log out</button>
+          </div>
           <AddWord />
           <WordList currentUser={currentUser} />
         </>

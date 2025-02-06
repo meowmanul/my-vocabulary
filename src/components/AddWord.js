@@ -1,10 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { db, auth } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
+import './AddWord.css';
 
 export default function AddWord() {
   const [word, setWord] = useState('');
   const [translation, setTranslation] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setIsAuthenticated(!!user);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,19 +42,25 @@ export default function AddWord() {
     }
   };
 
+if (!isAuthenticated) {
+    return <div>Please log in to add words.</div>;
+  }
+
   return (
+    <div className="addword-container">
     <form onSubmit={handleSubmit}>
       <input
         value={word}
         onChange={(e) => setWord(e.target.value)}
-        placeholder="Слово"
+        placeholder="Word"
       />
       <input
         value={translation}
         onChange={(e) => setTranslation(e.target.value)}
-        placeholder="Перевод"
+        placeholder="Translation"
       />
-      <button type="submit">Добавить</button>
+      <button type="submit">Add</button>
     </form>
+    </div>
   );
 }

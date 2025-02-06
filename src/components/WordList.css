@@ -1,0 +1,31 @@
+.wordlist-container {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .wordlist-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    background-color: #fafafa;
+  }
+  
+  .wordlist-item h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .wordlist-item p {
+    margin: 5px 0 0 0;
+    color: #555;
+  }
+  
+  .wordlist-item .date-text {
+    color: #999;
+    font-size: 12px;
+    margin-top: 5px;
+  }

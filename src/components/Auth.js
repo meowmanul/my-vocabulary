@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
+import './Auth.css';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -24,11 +25,11 @@ export default function Auth() {
   };
 
   return (
-    <div>
+    <div className="auth-container">
       <input type="email" onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
       <input type="password" onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-      <button onClick={handleLogin}>Войти</button>
-      <button onClick={handleSignUp}>Регистрация</button>
+      <button onClick={handleLogin}>Log in</button>
+      <button onClick={handleSignUp}>Sign in</button>
     </div>
   );
 }
