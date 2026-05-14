@@ -1,70 +1,58 @@
-# Getting Started with Create React App
+# My Vocabulary
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A small React app for saving personal vocabulary words. Authentication and word storage are powered by Firebase Auth and Cloud Firestore.
 
-## Available Scripts
+## Requirements
 
-In the project directory, you can run:
+- Node.js and npm
+- A Firebase project with Email/Password authentication enabled
+- A Firestore database
 
-### `npm start`
+## Local setup
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Install dependencies:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+   ```bash
+   npm install
+   ```
 
-### `npm test`
+2. Copy the environment template and fill it with values from your Firebase web app settings:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+   ```bash
+   cp .env.example .env.local
+   ```
 
-### `npm run build`
+3. Start the development server:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   ```bash
+   npm start
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Available scripts
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- `npm start` — run the app locally.
+- `npm run build` — create a production build in `build/`.
+- `npm test` — launch the Create React App test runner.
+- `npm run deploy` — publish the production build to GitHub Pages.
 
-### `npm run eject`
+## Recommended Firestore shape
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Words are stored per user under:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```text
+users/{userId}/words/{wordId}
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Each word document contains:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- `word` — the original word.
+- `translation` — the translation.
+- `createdAt` — server timestamp used for ordering.
 
-## Learn More
+## Suggested next steps
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Add edit and search/filter features for saved words.
+- Add language fields and tags so users can organize vocabulary by topic.
+- Add tests for authentication, word creation, deletion, and date formatting.
+- Replace Create React App with a maintained toolchain such as Vite when the project grows.
+- Add Firebase security rules and document them in the repository before production use.

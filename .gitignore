@@ -34,8 +34,6 @@ firebase-debug.log
 *.sln
 *.sw?
 
-src/firebase.js
-
 # Общие системные файлы
 .DS_Store
 .thumbs.db

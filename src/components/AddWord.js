@@ -1,66 +1,64 @@
-import { useState, useEffect } from 'react';
-import { db, auth } from '../firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { useState } from 'react';
+import { db } from '../firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import './AddWord.css';
 
-export default function AddWord() {
+export default function AddWord({ currentUser }) {
   const [word, setWord] = useState('');
   const [translation, setTranslation] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setIsAuthenticated(!!user);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!auth.currentUser?.uid) {
-      alert("Error: user is not authorized!");
+    const trimmedWord = word.trim();
+    const trimmedTranslation = translation.trim();
+
+    if (!currentUser?.uid) {
+      alert('Error: user is not authorized!');
       return;
     }
 
+    if (!trimmedWord || !trimmedTranslation) {
+      alert('Please fill in both word and translation.');
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
-      const docRef = await addDoc(
-        collection(db, 'users', auth.currentUser.uid, 'words'), 
-        {
-          word,
-          translation,
-          createdAt: new Date(),
-        }
-      );
-      console.log("Word added with ID:", docRef.id);
+      await addDoc(collection(db, 'users', currentUser.uid, 'words'), {
+        word: trimmedWord,
+        translation: trimmedTranslation,
+        createdAt: serverTimestamp(),
+      });
       setWord('');
       setTranslation('');
     } catch (error) {
-      console.error("Total mistake:", error);
-      alert("Addition error:", error.message);
+      console.error('Addition error:', error);
+      alert(`Addition error: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-if (!isAuthenticated) {
-    return <div>Please log in to add words.</div>;
-  }
-
   return (
     <div className="addword-container">
-    <form onSubmit={handleSubmit}>
-      <input
-        value={word}
-        onChange={(e) => setWord(e.target.value)}
-        placeholder="Word"
-      />
-      <input
-        value={translation}
-        onChange={(e) => setTranslation(e.target.value)}
-        placeholder="Translation"
-      />
-      <button type="submit">Add</button>
-    </form>
+      <form onSubmit={handleSubmit}>
+        <input
+          value={word}
+          onChange={(e) => setWord(e.target.value)}
+          placeholder="Word"
+        />
+        <input
+          value={translation}
+          onChange={(e) => setTranslation(e.target.value)}
+          placeholder="Translation"
+        />
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Adding...' : 'Add'}
+        </button>
+      </form>
     </div>
   );
 }

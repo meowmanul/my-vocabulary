@@ -29,3 +29,7 @@
 .auth-container button:hover {
   background-color: #0056b3;
 }
+.auth-container button:disabled {
+  background-color: #9e9e9e;
+  cursor: not-allowed;
+}

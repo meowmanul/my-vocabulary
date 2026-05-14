@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import Auth from './components/Auth';
 import AddWord from './components/AddWord';
 import WordList from './components/WordList';
@@ -10,21 +11,16 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);
-      
-      if (user) {
-        console.log("The user is logged in:", user.email);
-      } else {
-        console.log("User logged out");
-      }
     });
-    return () => unsubscribe();
+
+    return unsubscribe;
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="loading">Loading...</div>;
   }
 
   return (
@@ -34,10 +30,10 @@ function App() {
       ) : (
         <>
           <div className="header">
-          <h2>My Vocabulary</h2>
-            <button onClick={() => auth.signOut()}>Log out</button>
+            <h2>My Vocabulary</h2>
+            <button className="logout-button" onClick={() => signOut(auth)}>Log out</button>
           </div>
-          <AddWord />
+          <AddWord currentUser={currentUser} />
           <WordList currentUser={currentUser} />
         </>
       )}
